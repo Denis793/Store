@@ -12,10 +12,9 @@ export function loadCart(): CartLine[] {
 export function saveCart(lines: CartLine[]) {
   try {
     localStorage.setItem(KEY, JSON.stringify(lines));
-  } catch {
-    // Ignore write errors (e.g., storage full, private mode)
+  } catch (error) {
+    console.log('Failed to save cart to storage:', error);
   }
 }
 
-// ---- Types (щоб не тягнути ззовні)
 type CartLine = { id: string; qty: number };
