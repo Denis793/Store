@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { Item } from '@/types/item';
-import { fetchProducts } from '@/data/products.api';
+import { API } from '@/data/products.api';
 
 export type CatalogCtx = {
   items: Item[];
@@ -21,8 +21,18 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true);
       setError(null);
-      const data = await fetchProducts();
-      setItems(data);
+      const res = await fetch(API);
+      if (!res.ok) throw new Error('Failed to load products');
+      const data = await res.json();
+      const items = data
+        .filter((p: any) => typeof p.id === 'number' && p.title && typeof p.price === 'number')
+        .map((p: any) => ({
+          id: String(p.id),
+          title: p.title,
+          price: p.price,
+          img: p.images?.[0] || 'https://via.placeholder.com/400x300?text=No+Image',
+        }));
+      setItems(items);
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : 'Failed to load products';
       setError(message);
