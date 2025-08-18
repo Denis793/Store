@@ -11,6 +11,7 @@ type Action =
   | { type: 'REMOVE'; id: string }
   | { type: 'SET_QTY'; id: string; qty: number }
   | { type: 'CLEAR' };
+
 export type Catalog = Record<string, Item>;
 
 const DISCOUNT_THRESHOLD = 150;
@@ -36,7 +37,6 @@ export type CartContextType = {
 
 export const CartContext = createContext<CartContextType | null>(null);
 
-// persistence
 const KEY = 'store_cart_v1';
 const load = (): CartLine[] => {
   try {
@@ -48,10 +48,11 @@ const load = (): CartLine[] => {
 const save = (lines: CartLine[]) => {
   try {
     localStorage.setItem(KEY, JSON.stringify(lines));
-  } catch {}
+  } catch (err) {
+    console.warn('Failed to persist cart', err);
+  }
 };
 
-// reducer
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'OPEN':
@@ -81,7 +82,6 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-// provider
 export function CartProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, { lines: [], isOpen: false });
 
@@ -97,7 +97,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     save(state.lines);
   }, [state.lines]);
 
-  // actions
   const open = useCallback(() => dispatch({ type: 'OPEN' }), []);
   const close = useCallback(() => dispatch({ type: 'CLOSE' }), []);
   const toggle = useCallback(() => dispatch({ type: 'TOGGLE' }), []);
@@ -106,7 +105,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const setQty = useCallback((id: string, qty: number) => dispatch({ type: 'SET_QTY', id, qty }), []);
   const clear = useCallback(() => dispatch({ type: 'CLEAR' }), []);
 
-  // helpers
   const count = useMemo(() => state.lines.reduce((s, l) => s + l.qty, 0), [state.lines]);
 
   const mergeWithCatalog = useCallback(
@@ -121,7 +119,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 
   const total = useCallback(
-    (catalog: Catalog) => mergeWithCatalog(catalog).reduce((s, it) => s + it.lineTotal, 0),
+    (catalog: Catalog) => mergeWithCatalog(catalog).reduce((sum, it) => sum + it.lineTotal, 0),
     [mergeWithCatalog]
   );
 
@@ -162,7 +160,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
-// hook
 export function useCart() {
   const ctx = useContext(CartContext);
   if (!ctx) throw new Error('useCart must be used within CartProvider');

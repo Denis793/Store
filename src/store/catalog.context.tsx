@@ -23,8 +23,9 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
       setError(null);
       const data = await fetchProducts();
       setItems(data);
-    } catch (e: any) {
-      setError(e?.message || 'Failed to load products');
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Failed to load products';
+      setError(message);
     } finally {
       setLoading(false);
     }

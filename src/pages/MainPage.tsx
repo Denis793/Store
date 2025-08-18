@@ -22,7 +22,7 @@ function CardTile({
         <h4 className="font-semibold">{title}</h4>
         <p className="text-sm text-gray-600 line-clamp-3">{description}</p>
       </div>
-      <img className="object-cover w-[100%] h-[30%] rounded" src={img} alt={title} />
+      <img className="object-cover w-[55%] h-[100%] rounded" src={img} alt={title} />
     </article>
   );
 }
