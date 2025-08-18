@@ -6,7 +6,12 @@ export type ApiProduct = {
   title: string;
   description: string;
   price: number;
-  images: string[];
+  image: string;
+  category: string;
+  rating: {
+    rate: number;
+    count: number;
+  };
 };
 
 type Options = { limit?: number; offset?: number };
@@ -21,18 +26,25 @@ export function useProducts({ limit = 10, offset = 0 }: Options = {}) {
     try {
       setLoading(true);
       setError(null);
-      const url = `${API}?offset=${offset}&limit=${limit}`;
-      const res = await fetch(url, { signal: ctrl.signal });
+
+      const res = await fetch(API, { signal: ctrl.signal });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
       const data: ApiProduct[] = await res.json();
-      setProducts(data);
+
+      const start = Math.max(0, offset);
+      const end = Math.max(start, start + limit);
+      const page = data.slice(start, end);
+
+      setProducts(page);
     } catch (e: unknown) {
       if (e instanceof Error && e.name !== 'AbortError') {
-        setError(e.message ?? 'Failed to load products');
+        setError(e.message || 'Failed to load products');
       }
     } finally {
       setLoading(false);
     }
+
     return () => ctrl.abort();
   }, [limit, offset]);
 

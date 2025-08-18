@@ -11,7 +11,7 @@ function CardTile({
 }: {
   title: string;
   description: string;
-  img: string;
+  img?: string;
   big?: boolean;
 }) {
   return (
@@ -61,16 +61,11 @@ export default function MainPage() {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-6">
               {products.slice(0, 2).map((p) => (
-                <CardTile key={p.id} title={p.title} description={p.description} img={p.images?.[0] ?? ''} />
+                <CardTile key={p.id} title={p.title} description={p.description} img={p.image} />
               ))}
             </div>
             {products[2] && (
-              <CardTile
-                title={products[2].title}
-                description={products[2].description}
-                img={products[2].images?.[0] ?? ''}
-                big
-              />
+              <CardTile title={products[2].title} description={products[2].description} img={products[2].image} big />
             )}
           </div>
         )}

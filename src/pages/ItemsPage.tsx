@@ -1,10 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ItemsGrid from '../components/items/ItemsGrid';
 import Filters, { type FiltersState } from '../components/items/Filters';
-import { useCatalog } from '@/store/catalog.context';
+import { useCatalog } from '@/store/useCatalog';
+
+const PAGE_SIZE = 12;
 
 export default function ItemsPage() {
-  const { items, loading, error } = useCatalog();
+  const { items, loading, error, categories } = useCatalog();
 
   const priceMaxAbs = useMemo(() => (items.length ? Math.ceil(Math.max(...items.map((i) => i.price))) : 0), [items]);
 
@@ -12,26 +14,46 @@ export default function ItemsPage() {
     q: '',
     topic: 'All',
     maxPrice: priceMaxAbs,
+    tags: [],
+    sort: 'none',
   });
 
-  if (priceMaxAbs && filters.maxPrice === 0) {
-    setFilters((f) => ({ ...f, maxPrice: priceMaxAbs }));
-  }
+  useEffect(() => {
+    if (priceMaxAbs && filters.maxPrice === 0) {
+      setFilters((f) => ({ ...f, maxPrice: priceMaxAbs }));
+    }
+  }, [priceMaxAbs]);
 
-  const filtered = useMemo(() => {
+  const [visible, setVisible] = useState(PAGE_SIZE);
+  useEffect(() => {
+    setVisible(PAGE_SIZE);
+  }, [filters.q, filters.topic, filters.maxPrice, filters.sort, JSON.stringify(filters.tags)]);
+
+  const filteredSorted = useMemo(() => {
     const q = filters.q.trim().toLowerCase();
-    const byTopic = (title: string) => {
-      if (filters.topic === 'All') return true;
-      if (filters.topic === 'Food') return /food/i.test(title);
-      if (filters.topic === 'Toys') return /toy/i.test(title);
-      if (filters.topic === 'Clothes') return /hoodie|shirt|clothes/i.test(title);
-      return !/food|toy|hoodie|shirt|clothes/i.test(title);
+
+    const byCategory = (cat?: string) => (filters.topic === 'All' ? true : (cat || 'Other') === filters.topic);
+
+    const byTags = (it: any) => {
+      if (!filters.tags?.length) return true;
+      const tags: string[] = it.tags || [];
+      return filters.tags.every((t) => tags.includes(t));
     };
-    return items
-      .filter((i) => byTopic(i.title))
+
+    let res = items
+      .filter((i) => byCategory((i as any).category))
       .filter((i) => (filters.maxPrice ? i.price <= filters.maxPrice : true))
-      .filter((i) => (q ? i.title.toLowerCase().includes(q) : true));
+      .filter((i) => (q ? i.title.toLowerCase().includes(q) : true))
+      .filter((i) => byTags(i));
+
+    if (filters.sort === 'price-asc') res = [...res].sort((a, b) => a.price - b.price);
+    if (filters.sort === 'price-desc') res = [...res].sort((a, b) => b.price - a.price);
+
+    return res;
   }, [items, filters]);
+
+  const visibleItems = filteredSorted.slice(0, visible);
+  const canShowMore = visible < filteredSorted.length;
 
   return (
     <div className="py-8">
@@ -42,10 +64,30 @@ export default function ItemsPage() {
         {error && <p className="mt-4 text-red-600">{error}</p>}
 
         {!loading && !error && (
-          <div className="grid md:grid-cols-[280px_1fr] gap-6 mt-4">
-            <Filters value={filters} onChange={setFilters} priceMaxAbs={priceMaxAbs || 1000} />
-            <ItemsGrid items={filtered} />
-          </div>
+          <>
+            <div className="grid md:grid-cols-[280px_1fr] gap-6 mt-4">
+              <Filters
+                value={filters}
+                onChange={setFilters}
+                priceMaxAbs={priceMaxAbs || 1000}
+                topics={categories ?? ['All']}
+                availableTags={[]}
+                showSort
+              />
+              <ItemsGrid items={visibleItems} />
+            </div>
+
+            {canShowMore && (
+              <div className="mt-6 text-center">
+                <button
+                  onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                  className="px-6 py-2 rounded bg-gray-100 hover:bg-gray-200"
+                >
+                  Show more
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

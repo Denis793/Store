@@ -7,7 +7,12 @@ type Product = {
   title: string;
   description: string;
   price: number;
-  images: string[];
+  image: string;
+  category: string;
+  rating: {
+    rate: number;
+    count: number;
+  };
 };
 
 export default function ShopPage() {
@@ -30,7 +35,7 @@ export default function ShopPage() {
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {visibleProducts.map((p) => (
           <div key={p.id} className="border rounded-lg p-4 flex flex-col">
-            <img src={p.images?.[0]} alt={p.title} className="h-100 w-full object-contain mb-3" />
+            <img src={p.image} alt={p.title} className="h-100 w-full object-contain mb-3" />
             <h3 className="font-semibold">{p.title}</h3>
             <p className="text-sm text-gray-600 flex-1">{p.description}</p>
             <div className="mt-3 flex items-center justify-between">

@@ -2,7 +2,7 @@ import { useId } from 'react';
 
 export type FiltersState = {
   q: string;
-  topic: 'All' | 'Food' | 'Toys' | 'Clothes' | 'Other';
+  topic: string;
   maxPrice: number;
   tags: string[];
   sort: 'none' | 'price-asc' | 'price-desc';
