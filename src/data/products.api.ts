@@ -1,6 +1,6 @@
 import type { Item } from '@/types/item';
 
-const API = 'https://api.escuelajs.co/api/v1/products';
+export const API = 'https://api.escuelajs.co/api/v1/products';
 
 type ApiProduct = {
   id: number;

@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { API } from '@/data/products.api';
 
 export type ApiProduct = {
   id: number;
@@ -20,13 +21,15 @@ export function useProducts({ limit = 10, offset = 0 }: Options = {}) {
     try {
       setLoading(true);
       setError(null);
-      const url = `https://api.escuelajs.co/api/v1/products?offset=${offset}&limit=${limit}`;
+      const url = `${API}?offset=${offset}&limit=${limit}`;
       const res = await fetch(url, { signal: ctrl.signal });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data: ApiProduct[] = await res.json();
       setProducts(data);
-    } catch (e: any) {
-      if (e.name !== 'AbortError') setError(e?.message ?? 'Failed to load products');
+    } catch (e: unknown) {
+      if (e instanceof Error && e.name !== 'AbortError') {
+        setError(e.message ?? 'Failed to load products');
+      }
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useCart } from '@/store/useCart';
+import { API } from '@/data/products.api';
 
 type Product = {
   id: number;
@@ -15,7 +16,7 @@ export default function ShopPage() {
   const [visibleCount, setVisibleCount] = useState(12);
 
   useEffect(() => {
-    fetch('https://api.escuelajs.co/api/v1/products')
+    fetch(API)
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.error('Failed to load products', err));
