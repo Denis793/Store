@@ -29,12 +29,6 @@ export default function AboutPage() {
                 >
                   Browse items <ArrowRightIcon className="w-4 h-4" />
                 </Link>
-                <Link
-                  to="/history"
-                  className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 hover:bg-gray-50"
-                >
-                  Our history
-                </Link>
               </div>
             </div>
             <div className="relative">
