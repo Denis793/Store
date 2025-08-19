@@ -31,11 +31,6 @@ export default function Header() {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/history" className={linkCls}>
-                  Our history
-                </NavLink>
-              </li>
-              <li>
                 <NavLink to="/items" className={linkCls}>
                   All items
                 </NavLink>
@@ -43,6 +38,11 @@ export default function Header() {
               <li>
                 <NavLink to="/about" className={linkCls}>
                   About us
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/statistics" className={linkCls}>
+                  Statistics
                 </NavLink>
               </li>
             </ul>
@@ -90,8 +90,8 @@ export default function Header() {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/history" className={linkCls} onClick={() => setOpen(false)}>
-                Our history
+              <NavLink to="/statistics" className={linkCls} onClick={() => setOpen(false)}>
+                Statistics
               </NavLink>
             </li>
             <li>

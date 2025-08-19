@@ -1,72 +1,103 @@
+import { useMemo, useState } from 'react';
 import Section from '../components/common/Section';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+import { OrdersLineChart } from '@/stats/Charts/OrdersLineChart';
+import { CategoryPerformance } from '@/stats/Charts/CategoryPerformance';
+import { CategoryDonut } from '@/stats/Charts/CategoryDonut';
+import { KPIs } from '@/stats/Charts/KPIs';
+import { HeaderBar } from '@/stats/HeaderBar';
+import { RecentTransactions } from '@/stats/Table/RecentTransactions';
+import {
+  Period,
+  categoryPerformance,
+  donutDataBase,
+  kpiBase,
+  lineDataMonth,
+  lineDataWeek,
+  lineDataYear,
+} from '@/stats/data/analyticsMock';
+import { exportCSV } from '@/stats/utils/exportCsv';
 
-const stats = [
-  { label: 'Visitors', value: 245e3 },
-  { label: 'Regular customers', value: 35e3 },
-  { label: 'Turnover ($)', value: 1.2e6 },
-  { label: 'Reviews', value: 12e3 },
-];
-
-const seasonData = [
-  { name: 'Winter', sales: 4000 },
-  { name: 'Spring', sales: 8000 },
-  { name: 'Summer', sales: 12000 },
-  { name: 'Autumn', sales: 6000 },
-];
-
-const categories = [
-  { name: 'Accessories', value: 300 },
-  { name: 'Clothing', value: 500 },
-  { name: 'Eco-products', value: 200 },
-  { name: 'Home goods', value: 400 },
-];
-
-const COLORS = ['#facc15', '#f97316', '#22c55e', '#3b82f6'];
+const cardCls = 'bg-white rounded-2xl border shadow-sm';
+const panelTitle = 'text-sm font-medium text-gray-700';
+const numberLg = 'text-2xl md:text-3xl font-semibold tracking-tight';
 
 export default function StatisticsPage() {
+  const [period, setPeriod] = useState<Period>('week');
+
+  const lineData = useMemo(() => {
+    if (period === 'year') return lineDataYear;
+    if (period === 'month') return lineDataMonth;
+    return lineDataWeek;
+  }, [period]);
+
+  const donutData = useMemo(() => {
+    const factor = period === 'year' ? 12 : period === 'month' ? 4 : 1;
+    return donutDataBase.map((d) => ({ ...d, value: d.value * factor }));
+  }, [period]);
+
+  const kpis = useMemo(() => {
+    if (period === 'year') return kpiBase.map((k) => ({ ...k, value: Math.min(100, Math.round(k.value * 1.1)) }));
+    if (period === 'month') return kpiBase.map((k) => ({ ...k, value: Math.round(k.value * 1.05) }));
+    return kpiBase;
+  }, [period]);
+
+  const donutTotal = useMemo(() => donutData.reduce((a, b) => a + b.value, 0), [donutData]);
+
   return (
     <div className="page">
-      <Section title="Our Statistics">
-        <div className="grid gap-8 lg:grid-cols-2">
-          <div className="bg-white p-6 rounded-2xl shadow border">
-            <h3>General Info</h3>
-            <ul className="space-y-2 mt-2">
-              {stats.map((s) => (
-                <li key={s.label} className="flex justify-between">
-                  <span>{s.label}</span>
-                  <span className="font-medium">{s.value.toLocaleString()}</span>
-                </li>
-              ))}
-            </ul>
+      <Section title="Store Analytics">
+        <HeaderBar
+          period={period}
+          onChange={setPeriod}
+          onExport={() =>
+            exportCSV({
+              period,
+              line: lineData,
+              donut: donutData,
+              categories: categoryPerformance,
+              kpis,
+            })
+          }
+        />
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className={`${cardCls} lg:col-span-2`}>
+            <div className="p-4 border-b">
+              <div className="flex items-center justify-between">
+                <h3 className={panelTitle}>Store report ({period})</h3>
+                <div className="flex items-center gap-6">
+                  <div className="text-center">
+                    <div className="text-xs text-gray-500">Orders</div>
+                    <div className={numberLg}>{lineData.reduce((s, r) => s + r.orders, 0).toLocaleString()}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xs text-gray-500">Unique buyers</div>
+                    <div className={numberLg}>{lineData.reduce((s, r) => s + r.buyers, 0).toLocaleString()}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xs text-gray-500">Refunded</div>
+                    <div className={numberLg}>
+                      {Math.round(lineData.reduce((s, r) => s + r.orders, 0) * 0.04).toLocaleString()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <OrdersLineChart data={lineData} />
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow border">
-            <h3>Best Seasons</h3>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={seasonData}>
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="sales" fill="#facc15" />
-              </BarChart>
-            </ResponsiveContainer>
+          <CategoryPerformance className={cardCls} data={categoryPerformance} />
+
+          <div className={`${cardCls}`}>
+            <div className="p-4 border-b">
+              <h3 className={panelTitle}>Category share of sales</h3>
+            </div>
+            <CategoryDonut data={donutData} total={donutTotal} />
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow border lg:col-span-2">
-            <h3>Top Rated Categories</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie data={categories} dataKey="value" cx="50%" cy="50%" outerRadius={100} label>
-                  {categories.map((_, i) => (
-                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Legend />
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+          <RecentTransactions className={`${cardCls} lg:col-span-2`} />
+
+          <KPIs className={`${cardCls} lg:col-span-3`} data={kpis} />
         </div>
       </Section>
     </div>

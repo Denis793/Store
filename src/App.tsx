@@ -13,7 +13,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/items" element={<ItemsPage />} />
-        <Route path="/history" element={<StatisticsPage />} />
+        <Route path="/statistics" element={<StatisticsPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="*" element={<NotFound />} />
