@@ -30,7 +30,7 @@ export function RecentTransactions({ className }: { className?: string }) {
       {/* MOBILE LIST (xs/sm) */}
       <div className="p-4 grid gap-3 md:hidden">
         {mockRows.map((row) => (
-          <div key={row.code} className="rounded-xl border p-3 flex items-start justify-between gap-3">
+          <div key={row.code} className="card rounded-xl border p-3 flex items-start justify-between gap-3">
             <div className="min-w-0">
               <div className="text-sm font-medium truncate">{row.product}</div>
               <div className="text-xs text-gray-500 mt-0.5">

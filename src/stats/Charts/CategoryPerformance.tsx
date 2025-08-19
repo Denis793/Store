@@ -12,7 +12,7 @@ export function CategoryPerformance({
       </div>
       <div className="p-4 grid gap-3">
         {data.map((r) => (
-          <div key={r.name} className="flex items-center justify-between rounded-xl border px-3 py-2">
+          <div key={r.name} className="card flex items-center justify-between rounded-xl border px-3 py-2">
             <div className="flex items-center gap-3">
               <span className="inline-block w-8 h-8 rounded-full" style={{ backgroundColor: r.color, opacity: 0.2 }} />
               <div>
