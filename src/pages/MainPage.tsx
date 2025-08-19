@@ -25,9 +25,9 @@ function CategoryTile({ name, image, to, big }: { name: string; image?: string; 
         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-200 to-gray-300" />
       )}
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-      <div className="relative z-10 p-10 flex items-end h-full">
-        <h3 className="text-white font-semibold text-xl drop-shadow">{name}</h3>
+      {/* Темний фон для читабельності тексту */}
+      <div className="absolute bottom-0 left-0 w-full bg-black/70 px-4 py-3">
+        <h3 className="text-white font-bold text-lg md:text-xl tracking-wide">{name.toUpperCase()}</h3>
       </div>
     </Link>
   );
@@ -65,7 +65,10 @@ export default function MainPage() {
   const { products, loading, error } = useProducts({ limit: 50, offset: 0 });
 
   const heroImages: string[] = Object.values(
-    import.meta.glob('/src/img/heroSlider/*.{jpg,jpeg,png,webp}', { eager: true, as: 'url' })
+    import.meta.glob('/src/img/heroSlider/*.{jpg,jpeg,png,webp}', {
+      eager: true,
+      as: 'url',
+    })
   ).sort();
 
   type Category = { name: string; image?: string };
@@ -77,7 +80,10 @@ export default function MainPage() {
         map.set(p.category, p?.image);
       }
     }
-    return Array.from(map.entries()).map(([name, image]) => ({ name, image }));
+    return Array.from(map.entries()).map(([name, image]) => ({
+      name,
+      image,
+    }));
   })();
 
   const linkToCategory = (name: string) => `/items?category=${encodeURIComponent(name)}`;
@@ -95,7 +101,7 @@ export default function MainPage() {
           Discover quality you can trust, designed to inspire your lifestyle. Every product tells a story of care.
         </p>
         <div className="mt-6 flex gap-3">
-          <Link to="/items" className="bg-white text-black  px-4 py-2 rounded">
+          <Link to="/items" className="bg-white text-black px-4 py-2 rounded">
             All items
           </Link>
         </div>
@@ -116,7 +122,7 @@ export default function MainPage() {
         {error && <p className="text-red-600">{error}</p>}
 
         {!loading && !error && categories.length > 0 && (
-          <div className="rounded-3xl bg-gradient-to-br from-amber-50 to-white p-6 border">
+          <div className="rounded-3xl p-6 border">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-6">
                 {categories.slice(0, 2).map((c) => (

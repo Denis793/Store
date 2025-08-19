@@ -10,30 +10,28 @@ import { Link } from 'react-router-dom';
 
 export default function AboutPage() {
   return (
-    <div className="pb-16">
+    <div className="page">
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-200 via-white to-white" />
+        <div className="absolute inset-0" />
         <div className="container relative">
           <div className="py-16 md:py-24 grid md:grid-cols-2 gap-8 items-center">
             <div>
               <p className="text-sm uppercase tracking-wider text-amber-700/80">About our store</p>
-              <h1 className="mt-2 text-3xl md:text-5xl font-extrabold leading-tight text-gray-900">
-                From a small idea to a trusted marketplace
-              </h1>
-              <p className="mt-4 text-gray-600 max-w-prose">
+              <h1>From a small idea to a trusted marketplace</h1>
+              <p className="mt-4 max-w-prose">
                 We started with a simple mission: make quality products accessible to everyone. Today, we’re a growing
                 community of customers, partners, and makers moving retail forward.
               </p>
               <div className="mt-6 flex gap-3">
                 <Link
                   to="/items"
-                  className="inline-flex items-center gap-2 rounded-lg bg-black text-white px-4 py-2 hover:bg-gray-800 transition"
+                  className="inline-flex items-center gap-2 rounded-lg bg-black text-white px-4 py-2 hover:bg-gray-800"
                 >
                   Browse items <ArrowRightIcon className="w-4 h-4" />
                 </Link>
                 <Link
                   to="/history"
-                  className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 hover:bg-gray-50 transition"
+                  className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 hover:bg-gray-50"
                 >
                   Our history
                 </Link>
@@ -46,8 +44,8 @@ export default function AboutPage() {
                   <Stat value="25k+" label="Customers" />
                   <Stat value="3.8k+" label="Products" />
                 </div>
-                <div className="mt-6 h-[1px] bg-gray-100" />
-                <ul className="mt-6 space-y-2 text-sm text-gray-700">
+                <div className="mt-6 h-px bg-gray-100" />
+                <ul className="mt-6 space-y-2 text-sm">
                   <li className="flex items-center gap-2">
                     <CheckBadgeIcon className="w-5 h-5 text-amber-600" /> Quality-first curation
                   </li>
@@ -84,7 +82,7 @@ export default function AboutPage() {
       </section>
 
       <section className="container mt-14">
-        <h2 className="text-2xl font-bold">Milestones</h2>
+        <h2>Milestones</h2>
         <div className="mt-6 relative">
           <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-200" />
           <TimelineItem year="2015" title="First orders shipped">
@@ -103,8 +101,8 @@ export default function AboutPage() {
       </section>
 
       <section className="container mt-14">
-        <div className="rounded-2xl border bg-gradient-to-br from-white to-amber-50 p-6 md:p-8">
-          <h3 className="text-xl font-semibold">Our Values</h3>
+        <div className="rounded-2xl border p-6 md:p-8">
+          <h3>Our Values</h3>
           <div className="mt-4 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
             <Value title="Honesty" desc="Transparent pricing and clear policies." />
             <Value title="Quality" desc="Carefully selected products and partners." />
@@ -122,7 +120,7 @@ export default function AboutPage() {
           </div>
           <Link
             to="/items"
-            className="inline-flex items-center gap-2 rounded-lg bg-white text-black px-4 py-2 hover:bg-gray-100 transition"
+            className="inline-flex items-center gap-2 rounded-lg bg-white text-black px-4 py-2 hover:bg-gray-100"
           >
             Shop now <ArrowRightIcon className="w-4 h-4" />
           </Link>
@@ -137,13 +135,12 @@ function Card({ title, icon, children }: { title: string; icon?: React.ReactNode
     <div className="rounded-2xl border bg-white p-6 shadow-sm hover:shadow-md transition">
       <div className="flex items-center gap-3">
         {icon}
-        <h3 className="text-lg font-semibold">{title}</h3>
+        <h3>{title}</h3>
       </div>
-      <p className="mt-3 text-gray-600 leading-relaxed">{children}</p>
+      <p className="mt-3">{children}</p>
     </div>
   );
 }
-
 function TimelineItem({ year, title, children }: { year: string; title: string; children: React.ReactNode }) {
   return (
     <div className="pl-10 pb-8 relative">
@@ -154,7 +151,6 @@ function TimelineItem({ year, title, children }: { year: string; title: string; 
     </div>
   );
 }
-
 function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div>
@@ -163,7 +159,6 @@ function Stat({ value, label }: { value: string; label: string }) {
     </div>
   );
 }
-
 function Value({ title, desc }: { title: string; desc: string }) {
   return (
     <div className="rounded-xl border bg-white/60 p-4">

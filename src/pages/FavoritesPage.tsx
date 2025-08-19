@@ -8,19 +8,19 @@ export default function FavoritesPage() {
   const items = useMemo(() => Object.values(itemsMap), [itemsMap]);
 
   return (
-    <div className="py-8">
-      <div className="container">
+    <div className="page">
+      <div className="container py-8">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Favorites</h2>
+          <h2>Favorites</h2>
           {items.length > 0 && (
-            <button onClick={clear} className="px-3 py-1.5 text-sm rounded border hover:bg-gray-50">
+            <button onClick={clear} className="px-3 py-1.5 rounded border hover:bg-gray-50">
               Clear all
             </button>
           )}
         </div>
 
         {items.length === 0 ? (
-          <p className="mt-6 text-gray-600">
+          <p className="mt-6">
             You have no favorites yet.{' '}
             <Link to="/items" className="underline">
               Browse items
@@ -38,12 +38,9 @@ export default function FavoritesPage() {
                   )}
                 </div>
                 <h3 className="font-semibold line-clamp-1">{p.title}</h3>
-                {typeof p.price !== 'undefined' && <p className="text-sm text-gray-700 mt-1">${p.price}</p>}
-                <div className="mt-3 flex gap-2">
-                  <Link
-                    to={`/item/${p.id}`}
-                    className="px-3 py-1.5 text-sm rounded bg-black text-white hover:bg-gray-800"
-                  >
+                {typeof p.price !== 'undefined' && <p className="mt-1">${p.price}</p>}
+                <div className="mt-3">
+                  <Link to={`/item/${p.id}`} className="px-3 py-1.5 rounded bg-black text-white hover:bg-gray-800">
                     View
                   </Link>
                 </div>
