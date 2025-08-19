@@ -3,8 +3,8 @@ import { API } from '@/data/products.api';
 
 export type CategoryInfo = {
   name: string;
-  image?: string; // прев’ю з першого товару категорії
-  count: number; // скільки товарів у категорії
+  image?: string;
+  count: number;
 };
 
 const norm = (s: string) => s.trim().toLowerCase();
