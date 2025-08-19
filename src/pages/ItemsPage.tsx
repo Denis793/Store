@@ -1,34 +1,69 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ItemsGrid from '../components/items/ItemsGrid';
 import Filters, { type FiltersState } from '../components/items/Filters';
 import { useCatalog } from '@/store/useCatalog';
 
 const PAGE_SIZE = 12;
 
+const norm = (s: string) => s.trim().toLowerCase();
+
 export default function ItemsPage() {
   const { items, loading, error, categories } = useCatalog();
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  // Значення категорії з URL: ?category=...
+  const categoryFromQS = useMemo(() => (searchParams.get('category') ?? '').trim(), [searchParams]);
+
+  // Абсолютний максимум ціни
   const priceMaxAbs = useMemo(() => (items.length ? Math.ceil(Math.max(...items.map((i) => i.price))) : 0), [items]);
 
-  const [filters, setFilters] = useState<FiltersState>({
+  // Список тем для фільтра (категорій) з "All" попереду
+  const topics = useMemo(() => {
+    const base = Array.isArray(categories) ? categories.filter(Boolean) : [];
+    const unique = Array.from(new Set(base));
+    return ['All', ...unique];
+  }, [categories]);
+
+  // Вибираємо точне ім'я категорії з магазину за значенням з URL (без урахування регістру)
+  const resolvedTopicFromQS = useMemo(() => {
+    if (!categoryFromQS) return 'All';
+    const exact = topics.find((t) => norm(t) === norm(categoryFromQS));
+    return exact ?? categoryFromQS; // якщо ще не завантажились topics — тимчасово використовуємо значення з URL
+  }, [categoryFromQS, topics]);
+
+  // ---- ФІЛЬТРИ ----
+  const [filters, setFilters] = useState<FiltersState>(() => ({
     q: '',
-    topic: 'All',
-    maxPrice: priceMaxAbs,
+    topic: resolvedTopicFromQS || 'All',
+    maxPrice: 0, // оновимо нижче, коли порахується priceMaxAbs
     tags: [],
     sort: 'none',
-  });
+  }));
 
+  // Коли порахувався абсолютний максимум ціни — підставити у фільтр, якщо там 0
   useEffect(() => {
     if (priceMaxAbs && filters.maxPrice === 0) {
       setFilters((f) => ({ ...f, maxPrice: priceMaxAbs }));
     }
-  }, [priceMaxAbs]);
+  }, [priceMaxAbs]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Якщо змінюється ?category в URL або оновились topics — синхронізуємо filters.topic
+  useEffect(() => {
+    setFilters((f) => {
+      if (f.topic === resolvedTopicFromQS) return f;
+      return { ...f, topic: resolvedTopicFromQS };
+    });
+  }, [resolvedTopicFromQS]);
+
+  // Пагінація: при зміні будь-якого фільтра — скидаємо до першої сторінки
   const [visible, setVisible] = useState(PAGE_SIZE);
   useEffect(() => {
     setVisible(PAGE_SIZE);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters.q, filters.topic, filters.maxPrice, filters.sort, JSON.stringify(filters.tags)]);
 
+  // Фільтрація + сортування
   const filteredSorted = useMemo(() => {
     const q = filters.q.trim().toLowerCase();
 
@@ -55,6 +90,20 @@ export default function ItemsPage() {
   const visibleItems = filteredSorted.slice(0, visible);
   const canShowMore = visible < filteredSorted.length;
 
+  // Обгортка для керування Filters, яка також синхронізує URL ?category
+  const handleFiltersChange = (next: FiltersState) => {
+    setFilters(next);
+
+    // Синхронізуємо тільки категорію в URL:
+    const sp = new URLSearchParams(searchParams);
+    if (next.topic && next.topic !== 'All') {
+      sp.set('category', next.topic);
+    } else {
+      sp.delete('category');
+    }
+    setSearchParams(sp, { replace: true });
+  };
+
   return (
     <div className="py-8">
       <div className="container">
@@ -68,9 +117,9 @@ export default function ItemsPage() {
             <div className="grid md:grid-cols-[280px_1fr] gap-6 mt-4">
               <Filters
                 value={filters}
-                onChange={setFilters}
+                onChange={handleFiltersChange}
                 priceMaxAbs={priceMaxAbs || 1000}
-                topics={categories ?? ['All']}
+                topics={topics}
                 availableTags={[]}
                 showSort
               />
