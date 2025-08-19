@@ -28,7 +28,7 @@ export default function CartSidebar() {
   return (
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/50" onClick={cart.close} />
-      <aside className="absolute right-0 top-0 h-full w-full max-w-sm bg-white shadow-xl flex flex-col">
+      <aside className="card absolute right-0 top-0 h-full w-full max-w-sm bg-white shadow-xl flex flex-col">
         <header className="p-4 border-b flex justify-between items-center">
           <h3 className="text-lg font-semibold">Your Cart ({cart.count})</h3>
           <button onClick={cart.close} className="text-xl leading-none">
