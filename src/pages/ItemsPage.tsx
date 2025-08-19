@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCatalog } from '@/store/useCatalog';
 import { useSearchParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
 import ItemsGrid from '../components/items/ItemsGrid';
 import Filters, { type FiltersState } from '../components/items/Filters';
-import { useCatalog } from '@/store/useCatalog';
 
 const PAGE_SIZE = 12;
-
 const norm = (s: string) => s.trim().toLowerCase();
 
 export default function ItemsPage() {
@@ -13,13 +12,12 @@ export default function ItemsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const categoryFromQS = useMemo(() => (searchParams.get('category') ?? '').trim(), [searchParams]);
-
   const priceMaxAbs = useMemo(() => (items.length ? Math.ceil(Math.max(...items.map((i) => i.price))) : 0), [items]);
 
   const topics = useMemo(() => {
     const base = Array.isArray(categories) ? categories.filter(Boolean) : [];
-    const unique = Array.from(new Set(base));
-    return ['All', ...unique];
+    const unique = Array.from(new Set(base.map((c) => c.trim())));
+    return ['All', ...unique.filter((c) => c.toLowerCase() !== 'all')];
   }, [categories]);
 
   const resolvedTopicFromQS = useMemo(() => {
@@ -37,16 +35,11 @@ export default function ItemsPage() {
   }));
 
   useEffect(() => {
-    if (priceMaxAbs && filters.maxPrice === 0) {
-      setFilters((f) => ({ ...f, maxPrice: priceMaxAbs }));
-    }
+    if (priceMaxAbs && filters.maxPrice === 0) setFilters((f) => ({ ...f, maxPrice: priceMaxAbs }));
   }, [priceMaxAbs]);
 
   useEffect(() => {
-    setFilters((f) => {
-      if (f.topic === resolvedTopicFromQS) return f;
-      return { ...f, topic: resolvedTopicFromQS };
-    });
+    setFilters((f) => (f.topic === resolvedTopicFromQS ? f : { ...f, topic: resolvedTopicFromQS }));
   }, [resolvedTopicFromQS]);
 
   const [visible, setVisible] = useState(PAGE_SIZE);
@@ -56,14 +49,9 @@ export default function ItemsPage() {
 
   const filteredSorted = useMemo(() => {
     const q = filters.q.trim().toLowerCase();
-
     const byCategory = (cat?: string) => (filters.topic === 'All' ? true : (cat || 'Other') === filters.topic);
-
-    const byTags = (it: any) => {
-      if (!filters.tags?.length) return true;
-      const tags: string[] = it.tags || [];
-      return filters.tags.every((t) => tags.includes(t));
-    };
+    const byTags = (it: any) =>
+      !filters.tags?.length ? true : (it.tags || []).every((t: string) => filters.tags.includes(t));
 
     let res = items
       .filter((i) => byCategory((i as any).category))
@@ -73,7 +61,6 @@ export default function ItemsPage() {
 
     if (filters.sort === 'price-asc') res = [...res].sort((a, b) => a.price - b.price);
     if (filters.sort === 'price-desc') res = [...res].sort((a, b) => b.price - a.price);
-
     return res;
   }, [items, filters]);
 
@@ -82,22 +69,18 @@ export default function ItemsPage() {
 
   const handleFiltersChange = (next: FiltersState) => {
     setFilters(next);
-
     const sp = new URLSearchParams(searchParams);
-    if (next.topic && next.topic !== 'All') {
-      sp.set('category', next.topic);
-    } else {
-      sp.delete('category');
-    }
+    if (next.topic && next.topic !== 'All') sp.set('category', next.topic);
+    else sp.delete('category');
     setSearchParams(sp, { replace: true });
   };
 
   return (
-    <div className="py-8">
-      <div className="container">
-        <h2 className="text-2xl font-semibold">All Items</h2>
+    <div className="page">
+      <div className="container py-8">
+        <h2>All Items</h2>
 
-        {loading && <p className="mt-4 text-gray-500">Loading…</p>}
+        {loading && <p className="mt-4">Loading…</p>}
         {error && <p className="mt-4 text-red-600">{error}</p>}
 
         {!loading && !error && (
