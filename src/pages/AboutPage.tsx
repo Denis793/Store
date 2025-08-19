@@ -34,7 +34,7 @@ export default function AboutPage() {
             <div className="relative">
               <div className="rounded-3xl border bg-white shadow-lg p-6 md:p-8">
                 <div className="grid grid-cols-3 gap-4 text-center">
-                  <Stat value="9+" label="Years" />
+                  <Stat value="10+" label="Years" />
                   <Stat value="25k+" label="Customers" />
                   <Stat value="3.8k+" label="Products" />
                 </div>
