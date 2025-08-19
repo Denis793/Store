@@ -16,7 +16,7 @@ export function HeaderBar({
       </p>
       <div className="flex items-center gap-2">
         <select
-          className="px-3 py-2 rounded-lg border bg-white text-sm"
+          className="card px-3 m-5 py-2 rounded-lg border bg-white text-sm"
           value={period}
           onChange={(e) => onChange(e.target.value as Period)}
           aria-label="Select period"
@@ -27,7 +27,7 @@ export function HeaderBar({
         </select>
         <button
           onClick={onExport}
-          className="px-3 py-2 rounded-lg border bg-emerald-600 text-white text-sm hover:bg-emerald-700 transition"
+          className="card px-3 py-2 rounded-lg border bg-emerald-600 text-white text-sm hover:bg-emerald-700 transition"
         >
           Export
         </button>

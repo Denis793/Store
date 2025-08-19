@@ -1,8 +1,14 @@
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
-export function OrdersLineChart({ data }: { data: { name: string; orders: number; buyers: number }[] }) {
+export function OrdersLineChart({
+  data,
+  className = 'h-[260px] sm:h-[320px] px-2 pb-4',
+}: {
+  data: { name: string; orders: number; buyers: number }[];
+  className?: string;
+}) {
   return (
-    <div className="h-[260px] sm:h-[320px] px-2 pb-4">
+    <div className={className}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ left: 8, right: 16, top: 10, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" />

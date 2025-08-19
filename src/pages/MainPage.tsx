@@ -9,7 +9,7 @@ function CategoryTile({ name, image, to, big }: { name: string; image?: string; 
   return (
     <Link
       to={to}
-      className={`relative group block rounded-2xl overflow-hidden border bg-white shadow-sm hover:shadow-xl transition-all duration-300 ${
+      className={`card relative group block rounded-2xl overflow-hidden border bg-white shadow-sm hover:shadow-xl transition-all duration-300 ${
         big ? 'min-h-[260px]' : 'min-h-[200px]'
       }`}
       aria-label={`Open category ${name}`}
@@ -44,7 +44,7 @@ function Stars({ value }: { value: number }) {
 
 function ReviewCard({ r }: { r: (typeof reviews)[number] }) {
   return (
-    <article className="rounded-2xl border bg-white p-5 shadow-sm hover:shadow-md transition">
+    <article className="card rounded-2xl border  p-5 shadow-sm hover:shadow-md transition">
       <div className="flex items-center gap-3">
         <img src={r.avatar} alt={r.name} className="w-10 h-10 rounded-full object-cover" loading="lazy" />
         <div className="min-w-0">
@@ -100,7 +100,7 @@ export default function MainPage() {
           Discover quality you can trust, designed to inspire your lifestyle. Every product tells a story of care.
         </p>
         <div className="mt-6 flex gap-3">
-          <Link to="/items" className="bg-white text-black px-4 py-2 rounded">
+          <Link to="/items" className="card bg-white text-black px-4 py-2 rounded">
             All items
           </Link>
         </div>
@@ -121,7 +121,7 @@ export default function MainPage() {
         {error && <p className="text-red-600">{error}</p>}
 
         {!loading && !error && categories.length > 0 && (
-          <div className="rounded-3xl p-6 border">
+          <div className="card rounded-3xl p-6 border">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-6">
                 {categories.slice(0, 2).map((c) => (

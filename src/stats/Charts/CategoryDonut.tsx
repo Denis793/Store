@@ -3,13 +3,15 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Legend, Tooltip } from 'recha
 export function CategoryDonut({
   data,
   total,
+  className = 'h-[260px]',
 }: {
   data: { name: string; value: number; color: string }[];
   total: number;
+  className?: string;
 }) {
   return (
     <div className="p-4">
-      <div className="h-[260px]">
+      <div className={className}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie data={data} dataKey="value" nameKey="name" innerRadius={60} outerRadius={100} paddingAngle={2}>

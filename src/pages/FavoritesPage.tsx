@@ -13,7 +13,7 @@ export default function FavoritesPage() {
         <div className="flex items-center justify-between">
           <h2>Favorites</h2>
           {items.length > 0 && (
-            <button onClick={clear} className="px-3 py-1.5 rounded border hover:bg-gray-50">
+            <button onClick={clear} className="card px-3 py-1.5 rounded border hover:bg-gray-50">
               Clear all
             </button>
           )}
@@ -29,7 +29,7 @@ export default function FavoritesPage() {
         ) : (
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((p) => (
-              <article key={p.id} className="border rounded-xl p-4 bg-white shadow-sm">
+              <article key={p.id} className="card border rounded-xl p-4 bg-white shadow-sm">
                 <div className="aspect-[4/3] overflow-hidden rounded-lg mb-3">
                   {p.image ? (
                     <img src={p.image} alt={p.title} className="w-full h-full object-cover" loading="lazy" />

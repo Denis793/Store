@@ -101,7 +101,7 @@ export default function ItemsPage() {
               <div className="mt-6 text-center">
                 <button
                   onClick={() => setVisible((v) => v + PAGE_SIZE)}
-                  className="px-6 py-2 rounded bg-gray-100 hover:bg-gray-200"
+                  className="px-6 py-2 card rounded bg-gray-100 hover:bg-gray-200"
                 >
                   Show more
                 </button>

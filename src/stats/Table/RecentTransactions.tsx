@@ -21,13 +21,34 @@ export function RecentTransactions({ className }: { className?: string }) {
         <h3 className="text-sm font-medium text-gray-700">Recent transactions</h3>
         <div className="w-full max-w-[280px]">
           <input
-            className="w-full px-3 py-2 rounded-lg border text-sm"
+            className="card w-full px-3 py-2 rounded-lg border text-sm"
             placeholder="Search orders, customers, items…"
           />
         </div>
       </div>
 
-      <div className="p-4 overflow-x-auto">
+      {/* MOBILE LIST (xs/sm) */}
+      <div className="p-4 grid gap-3 md:hidden">
+        {mockRows.map((row) => (
+          <div key={row.code} className="rounded-xl border p-3 flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <div className="text-sm font-medium truncate">{row.product}</div>
+              <div className="text-xs text-gray-500 mt-0.5">
+                {row.code} · Stock {row.stock.toLocaleString()}
+              </div>
+            </div>
+            <div className="flex shrink-0 gap-1.5">
+              <button className="px-2 py-1 text-xs rounded bg-blue-50 text-blue-600 border">View</button>
+              <button className="px-2 py-1 text-xs rounded bg-emerald-50 text-emerald-600 border">Inv</button>
+              <button className="px-2 py-1 text-xs rounded bg-amber-50 text-amber-600 border">Hold</button>
+              <button className="px-2 py-1 text-xs rounded bg-rose-50 text-rose-600 border">Ref</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* DESKTOP TABLE (md+) */}
+      <div className="p-4 overflow-x-auto hidden md:block">
         <table className="w-full text-sm">
           <thead className="text-gray-500">
             <tr className="text-left">

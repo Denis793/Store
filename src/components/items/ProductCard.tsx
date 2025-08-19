@@ -7,8 +7,8 @@ export default function ProductCard({ item, showFavorite }: { item: Item; showFa
   const cart = useCart();
 
   return (
-    <article className="bg-white rounded-xl border p-4 hover:shadow-lg transition flex flex-col h-full group">
-      <div className="relative overflow-hidden rounded-lg mb-3">
+    <article className="card bg-white rounded-xl border p-4 hover:shadow-lg transition flex flex-col h-full group">
+      <div className="card relative overflow-hidden rounded-lg mb-3">
         <img
           src={item.img}
           alt={item.title}

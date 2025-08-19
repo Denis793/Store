@@ -36,14 +36,14 @@ export default function Filters({
   };
 
   return (
-    <aside className="border rounded p-4 space-y-5">
+    <aside className="card border rounded p-4 space-y-5">
       <div>
         <label htmlFor={idSearch} className="block text-sm font-medium">
           Search
         </label>
         <input
           id={idSearch}
-          className="mt-1 w-full border rounded px-3 py-2"
+          className="card mt-1 w-full border rounded px-3 py-2"
           placeholder="Search by name"
           value={value.q}
           onChange={(e) => onChange({ ...value, q: e.target.value })}
@@ -58,7 +58,7 @@ export default function Filters({
               <button
                 key={t}
                 type="button"
-                className={`border px-3 py-1.5 rounded ${
+                className={`card border px-3 py-1.5 rounded ${
                   value.topic === t || (!value.topic && t === 'All') ? 'bg-black text-white' : ''
                 }`}
                 onClick={() => onChange({ ...value, topic: t })}
@@ -115,7 +115,7 @@ export default function Filters({
           </label>
           <select
             id={idSort}
-            className="mt-1 w-full border rounded px-3 py-2 bg-white"
+            className="mt-1 card w-full border rounded px-3 py-2 bg-white"
             value={value.sort}
             onChange={(e) => onChange({ ...value, sort: e.target.value as FiltersState['sort'] })}
           >

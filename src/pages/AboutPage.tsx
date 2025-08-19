@@ -32,8 +32,8 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="relative">
-              <div className="rounded-3xl border bg-white shadow-lg p-6 md:p-8">
-                <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="card rounded-3xl border bg-white shadow-lg p-6 md:p-8">
+                <div className=" grid grid-cols-3 gap-4 text-center">
                   <Stat value="10+" label="Years" />
                   <Stat value="25k+" label="Customers" />
                   <Stat value="3.8k+" label="Products" />
@@ -95,7 +95,7 @@ export default function AboutPage() {
       </section>
 
       <section className="container mt-14">
-        <div className="rounded-2xl border p-6 md:p-8">
+        <div className="card rounded-2xl border p-6 md:p-8">
           <h3>Our Values</h3>
           <div className="mt-4 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
             <Value title="Honesty" desc="Transparent pricing and clear policies." />
@@ -114,7 +114,7 @@ export default function AboutPage() {
           </div>
           <Link
             to="/items"
-            className="inline-flex items-center gap-2 rounded-lg bg-white text-black px-4 py-2 hover:bg-gray-100"
+            className="inline-flex items-center gap-2 rounded-lg text-black px-4 py-2 hover:bg-gray-100"
           >
             Shop now <ArrowRightIcon className="w-4 h-4" />
           </Link>
@@ -126,7 +126,7 @@ export default function AboutPage() {
 
 function Card({ title, icon, children }: { title: string; icon?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border bg-white p-6 shadow-sm hover:shadow-md transition">
+    <div className="card rounded-2xl border p-6 shadow-sm hover:shadow-md transition">
       <div className="flex items-center gap-3">
         {icon}
         <h3>{title}</h3>
@@ -155,7 +155,7 @@ function Stat({ value, label }: { value: string; label: string }) {
 }
 function Value({ title, desc }: { title: string; desc: string }) {
   return (
-    <div className="rounded-xl border bg-white/60 p-4">
+    <div className="card rounded-xl border bg-white/60 p-4">
       <div className="text-sm font-semibold">{title}</div>
       <div className="mt-1 text-gray-600">{desc}</div>
     </div>
