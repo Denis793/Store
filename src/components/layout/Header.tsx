@@ -101,8 +101,6 @@ export default function Header() {
           </div>
         </div>
       </header>
-
-      <div className="h-[64px]" />
     </>
   );
 }
