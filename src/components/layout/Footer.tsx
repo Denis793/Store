@@ -1,3 +1,6 @@
+import { EnvelopeIcon } from '@heroicons/react/24/outline';
+import { FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa';
+
 export default function Footer() {
   return (
     <footer className="pt-16">
@@ -17,7 +20,34 @@ export default function Footer() {
             <FooterCol title="Discover" links={['Buy & Sell', 'Merchant', 'Giving back', 'Help & Support']} />
             <FooterCol title="About" links={['Staff', 'Team', 'Careers', 'Blog']} />
             <FooterCol title="Resources" links={['Security', 'Global', 'Charts', 'Privacy']} />
-            <FooterCol title="Social" links={['Facebook', 'Twitter', 'Instagram', 'YouTube']} />
+
+            <div>
+              <h5 className="text-white font-medium">Social</h5>
+              <div className="mt-3 flex gap-4 text-xl">
+                <a
+                  href="https://www.linkedin.com/in/shevchenkodenys3/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-white"
+                >
+                  <FaLinkedin />
+                </a>
+                <a href="https://github.com/Denis793" target="_blank" rel="noreferrer" className="hover:text-white">
+                  <FaGithub />
+                </a>
+                <a href="mailto:denys.shevchenko.pro@gmail.com" className="hover:text-white">
+                  <EnvelopeIcon className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://www.instagram.com/denys__shevchenko__/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-white"
+                >
+                  <FaInstagram />
+                </a>
+              </div>
+            </div>
           </div>
 
           <div className="mt-8 border-t border-white/10 pt-4 text-xs text-neutral-400">
@@ -38,7 +68,7 @@ export default function Footer() {
 
           <div className="mt-6 border-t border-white/10 pt-4 flex flex-col md:flex-row items-center justify-between gap-3 text-xs">
             <p className="text-neutral-400">
-              Copyright ©{new Date().getFullYear()} All rights reserved | Made with ♥ by Store
+              Copyright ©{new Date().getFullYear()} All rights reserved | Made with Denys by Store
             </p>
             <div className="flex items-center gap-4">
               <a href="#" className="hover:text-white">
