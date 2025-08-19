@@ -14,15 +14,22 @@ export type ApiProduct = {
   };
 };
 
-type Options = { limit?: number; offset?: number };
+type UseProductsArgs = {
+  limit?: number;
+  offset?: number;
+  category?: string;
+};
 
-export function useProducts({ limit = 10, offset = 0 }: Options = {}) {
+const normalize = (s: string) => s.trim().toLowerCase();
+
+export function useProducts({ limit = 20, offset = 0, category }: UseProductsArgs = {}) {
   const [products, setProducts] = useState<ApiProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const ctrl = new AbortController();
+
     try {
       setLoading(true);
       setError(null);
@@ -32,9 +39,13 @@ export function useProducts({ limit = 10, offset = 0 }: Options = {}) {
 
       const data: ApiProduct[] = await res.json();
 
+      const filtered = category
+        ? data.filter((p) => p?.category && normalize(p.category) === normalize(category))
+        : data;
+
       const start = Math.max(0, offset);
       const end = Math.max(start, start + limit);
-      const page = data.slice(start, end);
+      const page = filtered.slice(start, end);
 
       setProducts(page);
     } catch (e: unknown) {
@@ -46,7 +57,7 @@ export function useProducts({ limit = 10, offset = 0 }: Options = {}) {
     }
 
     return () => ctrl.abort();
-  }, [limit, offset]);
+  }, [limit, offset, category]);
 
   useEffect(() => {
     void load();
