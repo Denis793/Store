@@ -90,11 +90,6 @@ export default function Header() {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/statistics" className={linkCls} onClick={() => setOpen(false)}>
-                Statistics
-              </NavLink>
-            </li>
-            <li>
               <NavLink to="/items" className={linkCls} onClick={() => setOpen(false)}>
                 All items
               </NavLink>
@@ -102,6 +97,11 @@ export default function Header() {
             <li>
               <NavLink to="/about" className={linkCls} onClick={() => setOpen(false)}>
                 About us
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/statistics" className={linkCls} onClick={() => setOpen(false)}>
+                Statistics
               </NavLink>
             </li>
           </ul>
