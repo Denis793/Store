@@ -46,6 +46,11 @@ export default function Header() {
                     All items
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink to="/about" className={linkCls}>
+                    About us
+                  </NavLink>
+                </li>
               </ul>
             </nav>
 

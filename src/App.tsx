@@ -6,6 +6,7 @@ import HistoryPage from './pages/HistoryPage';
 import ShopPage from './pages/ShopPage';
 import NotFound from './pages/NotFound';
 import FavoritesPage from '@/pages/FavoritesPage';
+import AboutPage from './pages/AboutPage';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/items" element={<ItemsPage />} />
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/shop" element={<ShopPage />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
