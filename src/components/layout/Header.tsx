@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useCart } from '@/store/useCart';
-import { ShoppingCartIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ShoppingCartIcon, Bars3Icon, XMarkIcon, HeartIcon } from '@heroicons/react/24/outline';
+import { useFavorites, selectFavItemsMap } from '@/store/useFavorites';
 
 export default function Header() {
   const cart = useCart();
+  const favMap = useFavorites(selectFavItemsMap);
+  const favCount = useMemo(() => Object.keys(favMap).length, [favMap]);
   const [open, setOpen] = useState(false);
 
   const linkCls = ({ isActive }: { isActive: boolean }) =>
@@ -47,6 +50,15 @@ export default function Header() {
             </nav>
 
             <div className="flex items-center gap-3">
+              <Link to="/favorites" className="relative" aria-label="Open favorites">
+                <HeartIcon className="w-6 h-6 text-gray-700 hover:text-black" />
+                {favCount > 0 && (
+                  <span className="absolute -top-2 -right-2 text-xs bg-red-500 text-white px-1 rounded">
+                    {favCount}
+                  </span>
+                )}
+              </Link>
+
               <button onClick={cart.toggle} className="relative" aria-label="Open cart">
                 <ShoppingCartIcon className="w-6 h-6 text-gray-700 hover:text-black" />
                 {cart.count > 0 && (
@@ -95,6 +107,11 @@ export default function Header() {
               <li>
                 <NavLink to="/items" className={linkCls} onClick={() => setOpen(false)}>
                   All items
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/favorites" className={linkCls} onClick={() => setOpen(false)}>
+                  Favorites
                 </NavLink>
               </li>
             </ul>
