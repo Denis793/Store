@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import Section from '../components/common/Section';
 import HeroSlider from '../components/common/HeroSlider';
 import { useProducts } from '@/hooks/useProducts';
+import { StarIcon } from '@heroicons/react/24/solid';
+import { reviews } from '@/data/reviews';
 
 function CategoryTile({ name, image, to, big }: { name: string; image?: string; to: string; big?: boolean }) {
   return (
@@ -24,11 +26,38 @@ function CategoryTile({ name, image, to, big }: { name: string; image?: string; 
       )}
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-
-      <div className="relative z-10 p-10  flex items-end h-full">
+      <div className="relative z-10 p-10 flex items-end h-full">
         <h3 className="text-white font-semibold text-xl drop-shadow">{name}</h3>
       </div>
     </Link>
+  );
+}
+
+function Stars({ value }: { value: number }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <StarIcon key={i} className={`w-4 h-4 ${i <= value ? 'text-amber-500' : 'text-gray-300'}`} />
+      ))}
+    </div>
+  );
+}
+
+function ReviewCard({ r }: { r: (typeof reviews)[number] }) {
+  return (
+    <article className="rounded-2xl border bg-white p-5 shadow-sm hover:shadow-md transition">
+      <div className="flex items-center gap-3">
+        <img src={r.avatar} alt={r.name} className="w-10 h-10 rounded-full object-cover" loading="lazy" />
+        <div className="min-w-0">
+          <div className="font-medium leading-tight truncate">{r.name}</div>
+          <div className="text-xs text-gray-500">{new Date(r.date).toLocaleDateString()}</div>
+        </div>
+        <div className="ml-auto">
+          <Stars value={r.rating} />
+        </div>
+      </div>
+      <p className="mt-3 text-sm text-gray-700">{r.comment}</p>
+    </article>
   );
 }
 
@@ -56,46 +85,71 @@ export default function MainPage() {
   return (
     <>
       <HeroSlider images={heroImages}>
-        <h1 className="text-4xl md:text-5xl font-bold leading-tight drop-shadow">
+        <h1 className="text-5xl md:text-7xl font-extrabold leading-tight text-white drop-shadow-lg">
           Discover
           <br />
           Fox Life
         </h1>
-        <p className="mt-3 text-gray-100/90 drop-shadow">
-          Lorem ipsum dolor sit amet consectetur. Pharetra turpis sem ultricies.
+
+        <p className="mt-3 md:text-3xl text-gray-100/90 drop-shadow">
+          Discover quality you can trust, designed to inspire your lifestyle. Every product tells a story of care.
         </p>
         <div className="mt-6 flex gap-3">
-          <Link to="/items" className="bg-white text-black px-4 py-2 rounded">
+          <Link to="/items" className="bg-white text-black  px-4 py-2 rounded">
             All items
-          </Link>
-          <Link to="/shop" className="border border-white text-white px-4 py-2 rounded">
-            Shop
           </Link>
         </div>
       </HeroSlider>
 
       <Section>
+        <div className="flex items-end justify-between mb-4">
+          <div>
+            <h2 className="text-xl md:text-2xl font-bold">Featured Categories</h2>
+            <p className="text-sm text-gray-600">Explore our top picks — updated regularly.</p>
+          </div>
+          <Link to="/items" className="text-sm text-amber-600 hover:text-amber-700">
+            Browse all →
+          </Link>
+        </div>
+
         {loading && <p className="text-gray-500">Loading…</p>}
         {error && <p className="text-red-600">{error}</p>}
 
         {!loading && !error && categories.length > 0 && (
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-6">
-              {categories.slice(0, 2).map((c) => (
-                <CategoryTile key={c.name} name={c.name} image={c.image} to={linkToCategory(c.name)} />
-              ))}
-            </div>
+          <div className="rounded-3xl bg-gradient-to-br from-amber-50 to-white p-6 border">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-6">
+                {categories.slice(0, 2).map((c) => (
+                  <CategoryTile key={c.name} name={c.name} image={c.image} to={linkToCategory(c.name)} />
+                ))}
+              </div>
 
-            {categories[2] && (
-              <CategoryTile
-                name={categories[2].name}
-                image={categories[2].image}
-                to={linkToCategory(categories[2].name)}
-                big
-              />
-            )}
+              {categories[2] && (
+                <CategoryTile
+                  name={categories[2].name}
+                  image={categories[2].image}
+                  to={linkToCategory(categories[2].name)}
+                  big
+                />
+              )}
+            </div>
           </div>
         )}
+      </Section>
+
+      <Section>
+        <div className="flex items-end justify-between mb-4">
+          <h2 className="text-xl md:text-2xl font-bold">What customers say</h2>
+          <Link to="/history" className="text-sm text-amber-600 hover:text-amber-700">
+            Read more →
+          </Link>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {reviews.slice(0, 5).map((r) => (
+            <ReviewCard key={r.id} r={r} />
+          ))}
+        </div>
       </Section>
     </>
   );
