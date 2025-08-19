@@ -62,15 +62,15 @@ export default function StatisticsPage() {
 
         {/* Mobile KPI strip (desktop KPIs are shown in the chart card header) */}
         <div className="grid grid-cols-3 gap-3 sm:gap-4 md:hidden mb-4">
-          <div className="rounded-xl border p-3 text-center bg-white">
+          <div className="card rounded-xl border p-3 text-center bg-white">
             <div className="text-[10px] text-gray-500">Orders</div>
             <div className={numberLg}>{ordersSum.toLocaleString()}</div>
           </div>
-          <div className="rounded-xl border p-3 text-center bg-white">
+          <div className="card rounded-xl border p-3 text-center bg-white">
             <div className="text-[10px] text-gray-500">Buyers</div>
             <div className={numberLg}>{buyersSum.toLocaleString()}</div>
           </div>
-          <div className="rounded-xl border p-3 text-center bg-white">
+          <div className="card rounded-xl border p-3 text-center bg-white">
             <div className="text-[10px] text-gray-500">Refunded</div>
             <div className={numberLg}>{refunded.toLocaleString()}</div>
           </div>
