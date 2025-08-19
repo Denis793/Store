@@ -1,25 +1,24 @@
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  type TooltipProps,
-  type Payload,
-} from 'recharts';
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
 type Row = { name: string; orders: number; buyers: number };
 
-function CustomTooltip(props: TooltipProps<number, string>) {
-  const { active, payload, label } = props;
+type RechartsTooltipPayload = {
+  dataKey?: string | number;
+  value?: number | string;
+  color?: string;
+};
+
+type RechartsTooltipProps = {
+  active?: boolean;
+  payload?: RechartsTooltipPayload[];
+  label?: string | number;
+};
+
+function CustomTooltip({ active, payload, label }: RechartsTooltipProps) {
   if (!active || !payload || payload.length === 0) return null;
 
-  const arr = payload as Payload<number, string>[];
-
-  const orders = arr.find((p) => String(p.dataKey) === 'orders');
-  const buyers = arr.find((p) => String(p.dataKey) === 'buyers');
+  const orders = payload.find((p: RechartsTooltipPayload) => String(p.dataKey) === 'orders');
+  const buyers = payload.find((p: RechartsTooltipPayload) => String(p.dataKey) === 'buyers');
 
   return (
     <div className="rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900/95 shadow-lg px-3 py-2">
