@@ -25,7 +25,6 @@ function CategoryTile({ name, image, to, big }: { name: string; image?: string; 
         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-200 to-gray-300" />
       )}
 
-      {/* Темний фон для читабельності тексту */}
       <div className="absolute bottom-0 left-0 w-full bg-black/70 px-4 py-3">
         <h3 className="text-white font-bold text-lg md:text-xl tracking-wide">{name.toUpperCase()}</h3>
       </div>
