@@ -56,7 +56,6 @@ src/
 
 ```bash
 git clone https://github.com/Denis793/Store.git
-cd store-dashboard
 npm install
 npm run dev
 ```
