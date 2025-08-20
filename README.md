@@ -1,5 +1,25 @@
 # 🛍️ Store Dashboard
 
+
+<p align="center">
+  <a href="https://store-eosin-alpha.vercel.app/" target="_blank">
+    <img src="https://img.shields.io/badge/View%20Project-Click%20Here-blue?style=for-the-badge" alt="View Project">
+  </a>
+</p>
+
+---
+
+## 🖼️ Screenshot
+<div align="center">
+  <img src="https://github.com/Denis793/Store/blob/main/src/img/screens/screen-1.png" alt="View click" height="auto" width="100%">
+  <img src="https://github.com/Denis793/Store/blob/main/src/img/screens/screen-2.png" alt="View click" height="auto" width="100%">
+  <img src="https://github.com/Denis793/Store/blob/main/src/img/screens/screen-3.png" alt="View click" height="auto" width="100%">
+  <img src="https://github.com/Denis793/Store/blob/main/src/img/screens/screen-4.png" alt="View click" height="auto" width="100%">
+  <img src="https://github.com/Denis793/Store/blob/main/src/img/screens/screen-5.png" alt="View click" height="auto" width="100%">
+</div>
+
+---
+
 ## 📖 Description
 
 This project — **Store Dashboard**, is a web application for visualizing e-commerce statistics.  
