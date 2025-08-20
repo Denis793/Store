@@ -3,9 +3,15 @@ import { useSearchParams } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import ItemsGrid from '../components/items/ItemsGrid';
 import Filters, { type FiltersState } from '../components/items/Filters';
+import type { Item } from '@/types/item';
 
 const PAGE_SIZE = 12;
 const norm = (s: string) => s.trim().toLowerCase();
+
+type ExtendedItem = Item & {
+  category?: string;
+  tags?: string[];
+};
 
 export default function ItemsPage() {
   const { items, loading, error, categories } = useCatalog();
@@ -17,7 +23,7 @@ export default function ItemsPage() {
   const topics = useMemo(() => {
     const base = Array.isArray(categories) ? categories.filter(Boolean) : [];
     const unique = Array.from(new Set(base.map((c) => c.trim())));
-    return ['All', ...unique.filter((c) => c.toLowerCase() !== 'all')];
+    return ['All', ...unique.filter((c) => norm(c) !== 'all')];
   }, [categories]);
 
   const resolvedTopicFromQS = useMemo(() => {
@@ -36,7 +42,7 @@ export default function ItemsPage() {
 
   useEffect(() => {
     if (priceMaxAbs && filters.maxPrice === 0) setFilters((f) => ({ ...f, maxPrice: priceMaxAbs }));
-  }, [priceMaxAbs]);
+  }, [priceMaxAbs, filters.maxPrice]);
 
   useEffect(() => {
     setFilters((f) => (f.topic === resolvedTopicFromQS ? f : { ...f, topic: resolvedTopicFromQS }));
@@ -49,18 +55,21 @@ export default function ItemsPage() {
 
   const filteredSorted = useMemo(() => {
     const q = filters.q.trim().toLowerCase();
-    const byCategory = (cat?: string) => (filters.topic === 'All' ? true : (cat || 'Other') === filters.topic);
-    const byTags = (it: any) =>
-      !filters.tags?.length ? true : (it.tags || []).every((t: string) => filters.tags.includes(t));
 
-    let res = items
-      .filter((i) => byCategory((i as any).category))
+    const byCategory = (cat?: string) => (filters.topic === 'All' ? true : (cat ?? 'Other') === filters.topic);
+
+    const byTags = (it: { tags?: string[] }) =>
+      !filters.tags?.length ? true : (it.tags ?? []).every((t) => filters.tags.includes(t));
+
+    let res = (items as ExtendedItem[])
+      .filter((i) => byCategory(i.category))
       .filter((i) => (filters.maxPrice ? i.price <= filters.maxPrice : true))
       .filter((i) => (q ? i.title.toLowerCase().includes(q) : true))
       .filter((i) => byTags(i));
 
     if (filters.sort === 'price-asc') res = [...res].sort((a, b) => a.price - b.price);
     if (filters.sort === 'price-desc') res = [...res].sort((a, b) => b.price - a.price);
+
     return res;
   }, [items, filters]);
 
