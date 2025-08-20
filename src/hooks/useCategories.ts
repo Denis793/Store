@@ -7,6 +7,11 @@ export type CategoryInfo = {
   count: number;
 };
 
+type ApiProduct = {
+  category?: string | null;
+  image?: string | null;
+};
+
 const norm = (s: string) => s.trim().toLowerCase();
 
 export function useCategories() {
@@ -15,6 +20,7 @@ export function useCategories() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const ctrl = new AbortController();
     let cancelled = false;
 
     (async () => {
@@ -22,20 +28,22 @@ export function useCategories() {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(API);
+        const res = await fetch(API, { signal: ctrl.signal });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+
+        const data: unknown = await res.json();
+        const list = Array.isArray(data) ? (data as ApiProduct[]) : [];
 
         const map = new Map<string, CategoryInfo>();
-        for (const p of data ?? []) {
-          if (!p?.category) continue;
-          const key = norm(p.category);
+        for (const p of list) {
+          const cat = (p.category ?? '').toString().trim();
+          if (!cat) continue;
+
+          const key = norm(cat);
+          const img = (p.image ?? undefined) || undefined;
+
           if (!map.has(key)) {
-            map.set(key, {
-              name: p.category,
-              image: p.image,
-              count: 1,
-            });
+            map.set(key, { name: cat, image: img, count: 1 });
           } else {
             const curr = map.get(key)!;
             curr.count += 1;
@@ -45,8 +53,11 @@ export function useCategories() {
         if (!cancelled) {
           setCategories(Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name)));
         }
-      } catch (e: any) {
-        if (!cancelled) setError(e?.message ?? 'Failed to load categories');
+      } catch (e: unknown) {
+        if (!cancelled) {
+          const message = e instanceof Error ? e.message : 'Failed to load categories';
+          setError(message);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -54,6 +65,7 @@ export function useCategories() {
 
     return () => {
       cancelled = true;
+      ctrl.abort();
     };
   }, []);
 
