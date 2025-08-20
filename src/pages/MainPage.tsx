@@ -91,9 +91,9 @@ export default function MainPage() {
     <>
       <HeroSlider images={heroImages}>
         <h1 className="text-5xl md:text-7xl font-extrabold leading-tight text-white drop-shadow-lg">
-          Discover
+          Shop Smart,
           <br />
-          Fox Life
+          Live Better
         </h1>
 
         <p className="mt-3 md:text-3xl text-gray-100/90 drop-shadow">
